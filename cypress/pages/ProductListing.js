@@ -11,19 +11,27 @@ class ProductListingFeature {
     }
 
     verifyIfListHasElements = () => {
-        cy.xpath(this.productList).should("be.visible").scrollIntoView().then(() => {
-            cy.get(this.productListElements).should("have.length.greaterThan", 0);
+        cy.xpath(this.productList)
+            .should("be.visible")
+            .scrollIntoView()
+            .then(() => {
+                cy.get(this.productListElements)
+                .should("have.length.greaterThan", 0);
         });
     }
 
     verifyIfListNotExist = () => {
-        cy.get(this.centerColumn).should("be.visible").scrollIntoView();
-        cy.xpath(this.productList).should("not.exist");
+        cy.get(this.centerColumn)
+            .should("be.visible")
+            .scrollIntoView();
+        cy.xpath(this.productList)
+            .should("not.exist");
     }
 
-    verifyIfWarningMessageExists = () => {
+    verifyIfListHasNoProductsMessageExists = () => {
         cy.get(this.noProductWarning)
-            .should("be.visible").and("have.css", "background-color", "rgb(254, 145, 38)")
+            .should("be.visible")
+            .and("have.css", "background-color", "rgb(254, 145, 38)")
             .and("have.css", "border-color", "rgb(228, 117, 43)")
             .scrollIntoView();
     }

@@ -17,7 +17,7 @@ describe("Validate the product listing section exist or not on the main pages", 
         it("Verifiying if the product list has no elements on the webpage: " + pages.page, () => {
             cy.visit(pages.url);
             ProductListingFeature.verifyIfListNotExist();
-            ProductListingFeature.verifyIfWarningMessageExists();
+            ProductListingFeature.verifyIfListHasNoProductsMessageExists();
         });
     });
 

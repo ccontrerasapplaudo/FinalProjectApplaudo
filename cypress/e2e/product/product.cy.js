@@ -13,16 +13,16 @@ describe("Verify if the user is able to add a product to the shopping cart", () 
         ProductFeature.mouseOverRandomProduct();
         ProductFeature.extractTitleAndProductPrice();
         ProductFeature.clickAddToCartButton();
-        ProductFeature.verifyProductIsAddedToCart();
+        ProductFeature.verifyProductAddedToCartPopUpWindow();
 
     });
 
     //PRODUCT_02
     it("Verifying if the product has a quickview popup window on the webpage: ", () => {
         cy.viewport(1280, 720);
-        ProductFeature.mouseOverProduct();
+        ProductFeature.mouseOverPreviousRandomProduct();
         ProductFeature.clickQuickViewButton();
-        ProductFeature.verifyQuickViewInfo();
+        ProductFeature.verifyQuickViewInfoPopUpIsVisible();
 
     });
 
@@ -30,7 +30,7 @@ describe("Verify if the user is able to add a product to the shopping cart", () 
     it("Verifying if the product can be added to the shopping cart on the webpage: ", () => {
         cy.viewport(1280, 720);
         cy.reload();
-        ProductFeature.mouseOverProduct();
+        ProductFeature.mouseOverPreviousRandomProduct();
         ProductFeature.clickMoreButton();
         ProductFeature.verifyMoreInfoWebpage();
 

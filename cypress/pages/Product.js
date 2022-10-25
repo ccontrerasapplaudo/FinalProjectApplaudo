@@ -19,7 +19,7 @@ class ProductFeature {
         this.quickViewPopUpWindowCloseButton = "a.fancybox-close";
     }
 
-    getRandomInt(min, max) {
+    getAndSaveRandomNumber(min, max) {
         let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
         cy.readFile("cypress/fixtures/randomNumber.json", (error, data) => {
             if (error) {
@@ -56,88 +56,145 @@ class ProductFeature {
         });
     }
 
-    formatString(text) {
+    stringRemoveSpecialSymbols(text) {
         return text.replace(/(\r\n|\n|\r)/gm, "").trim();
     }
 
     mouseOverRandomProduct = () => {
-        cy.xpath(this.productListElements).should("be.visible").should("have.length.greaterThan", 0)
+        cy.xpath(this.productListElements)
+            .should("be.visible")
+            .should("have.length.greaterThan", 0)
             .then(listing => {
-                this.getRandomInt(0, listing.length - 1);
-                cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-                    cy.wrap(listing).eq(data.randomNumber).scrollIntoView().trigger("mouseover");
+                this.getAndSaveRandomNumber(0, listing.length - 1);
+                cy.readFile("cypress/fixtures/randomNumber.json")
+                    .then((data) => {
+                    cy.wrap(listing)
+                        .eq(data.randomNumber)
+                        .scrollIntoView()
+                        .trigger("mouseover");
                 });
             });
     }
 
-    mouseOverProduct = () => {
-        cy.xpath(this.productListElements).should("be.visible").should("have.length.greaterThan", 0)
+    mouseOverPreviousRandomProduct = () => {
+        cy.xpath(this.productListElements)
+            .should("be.visible")
+            .should("have.length.greaterThan", 0)
             .then(listing => {
-                cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-                    cy.wrap(listing).eq(data.randomNumber).scrollIntoView().trigger("mouseover");
+                cy.readFile("cypress/fixtures/randomNumber.json")
+                    .then((data) => {
+                        cy.wrap(listing)
+                            .eq(data.randomNumber)
+                            .scrollIntoView()
+                            .trigger("mouseover");
                 });
             });
     }
 
     extractTitleAndProductPrice = () => {
         cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-            cy.xpath(this.productListElements).eq(data.randomNumber).find(this.productListElementTitle).invoke('text').then((text) => {
-                this.saveProductTitle(this.formatString(text));
+            cy.xpath(this.productListElements)
+                .eq(data.randomNumber)
+                .find(this.productListElementTitle)
+                .invoke('text')
+                .then((text) => {
+                    this.saveProductTitle(this.stringRemoveSpecialSymbols(text));
             });
-            cy.xpath(this.productListElements).eq(data.randomNumber).find(this.productListElementPrice).invoke('text').then((text) => {
-                this.saveProductPrice(this.formatString(text));
+            cy.xpath(this.productListElements)
+                .eq(data.randomNumber)
+                .find(this.productListElementPrice)
+                .invoke('text')
+                .then((text) => {
+                    this.saveProductPrice(this.stringRemoveSpecialSymbols(text));
             });
         });
     }
 
     clickAddToCartButton = () => {
         cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-            cy.xpath(this.productListElements).eq(data.randomNumber).contains("Add to cart").scrollIntoView().click();
+            cy.xpath(this.productListElements)
+                .eq(data.randomNumber)
+                .contains("Add to cart")
+                .scrollIntoView()
+                .click();
         });
     }
 
-    verifyProductIsAddedToCart = () => {
-        cy.get(this.addToCartPopUpWindow,{ timeout: 10000 }).should("be.visible");
+    verifyProductAddedToCartPopUpWindow = () => {
+        cy.get(this.addToCartPopUpWindow,{ timeout: 10000 })
+            .should("be.visible");
 
         cy.readFile("cypress/fixtures/productInfo.json").then((data) => {
-            cy.get(this.addToCartPopUpWindowTitle).invoke('text').then((text) => {
-                expect(this.formatString(text)).to.eq(data.productTitle);
+            cy.get(this.addToCartPopUpWindowTitle)
+                .invoke('text')
+                .then((text) => {
+                    expect(this.stringRemoveSpecialSymbols(text))
+                        .to
+                        .eq(data.productTitle);
             });
-            cy.get(this.addToCartPopUpWindowPrice).invoke('text').then((text) => {
-                expect(this.formatString(text)).to.eq(data.productPrice);
+            cy.get(this.addToCartPopUpWindowPrice)
+                .invoke('text')
+                .then((text) => {
+                    expect(this.stringRemoveSpecialSymbols(text))
+                        .to
+                        .eq(data.productPrice);
             });
         });
 
-        cy.get(this.addToCartpopUpWindowSuccesfullMessage).invoke('text').then((text) => {
-            expect(this.formatString(text)).to.eq("Product successfully added to your shopping cart");
+        cy.get(this.addToCartpopUpWindowSuccesfullMessage)
+            .invoke('text')
+            .then((text) => {
+                expect(this.stringRemoveSpecialSymbols(text))
+                    .to
+                    .eq("Product successfully added to your shopping cart");
         });
 
-        cy.get(this.addToCartpopUpWindowCloseButton).should("be.visible").click();
+        cy.get(this.addToCartpopUpWindowCloseButton)
+            .should("be.visible").click();
     }
 
     clickQuickViewButton = () => {
         cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-            cy.xpath(this.productListElements).eq(data.randomNumber).should("be.visible").contains("Quick view").scrollIntoView().click();
+            cy.xpath(this.productListElements)
+                .eq(data.randomNumber)
+                .should("be.visible")
+                .contains("Quick view")
+                .scrollIntoView()
+                .click();
         });
     }
 
-    verifyQuickViewInfo = () => {
-        cy.get(this.quickViewPopUpWindow).its('0.contentDocument.body').then(cy.wrap).should("be.visible");
+    verifyQuickViewInfoPopUpIsVisible = () => {
+        cy.get(this.quickViewPopUpWindow)
+            .its('0.contentDocument.body')
+            .then(cy.wrap)
+            .should("be.visible");
     }
 
     clickMoreButton = () => {
-        cy.readFile("cypress/fixtures/randomNumber.json").then((data) => {
-            cy.xpath(this.productListElements).eq(data.randomNumber).contains("More").scrollIntoView().click();
+        cy.readFile("cypress/fixtures/randomNumber.json")
+            .then((data) => {
+                cy.xpath(this.productListElements)
+                .eq(data.randomNumber)
+                    .contains("More").scrollIntoView().click();
         });
     }
 
     verifyMoreInfoWebpage = () => {
             cy.readFile("cypress/fixtures/productInfo.json").then((data) => {
-                cy.get(this.quickViewPopUpWindowTitle).invoke('text').then((text) => {
-                    expect(this.formatString(text)).to.eq(data.productTitle);
+                cy.get(this.quickViewPopUpWindowTitle)
+                    .invoke('text')
+                    .then((text) => {
+                        expect(this.stringRemoveSpecialSymbols(text))
+                            .to
+                            .eq(data.productTitle);
                 });
-                cy.get(this.quickViewPopUpWindowPrice).invoke('text').then((text) => {
-                    expect(this.formatString(text)).to.eq(data.productPrice);
+                cy.get(this.quickViewPopUpWindowPrice)
+                    .invoke('text')
+                    .then((text) => {
+                        expect(this.stringRemoveSpecialSymbols(text))
+                            .to
+                            .eq(data.productPrice);
                 });
             });
     }
